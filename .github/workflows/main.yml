@@ -1,4 +1,4 @@
-name: Lint Code
+name: 'Lint Code'
 
 on:
   push:
@@ -10,36 +10,44 @@ jobs:
   lint_python:
     name: Lint Python Files
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Set up Python 3.12
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.12
+          python-version: '3.12'
 
       - name: Install flake8
-        run: pip install flake8
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
 
-      - name: Run flake8
-        run: flake8 . --config .flake8
+      - name: Run Python Linter
+        run: |
+          find . -name "*.py" -exec flake8 {} +
+          echo "✅ Linted all the Python files successfully"
 
   lint_js:
     name: Lint JavaScript Files
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js 20.x
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 20.x
+          node-version: '14'
 
       - name: Install JSHint
+        run: npm install -g jshint
+
+      - name: Run JavaScript Linter
+        run: |
+          find . -name "*.js" -exec jshint {} +
+          echo "✅ Linted all the JavaScript files successfully"
         run: npm install -g jshint
 
       - name: Run JSHint
